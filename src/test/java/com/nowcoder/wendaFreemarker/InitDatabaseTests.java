@@ -1,11 +1,15 @@
 package com.nowcoder.wendaFreemarker;
 
+import com.nowcoder.wendaFreemarker.dao.QuestionDAO;
 import com.nowcoder.wendaFreemarker.dao.UserDAO;
+import com.nowcoder.wendaFreemarker.model.Question;
 import com.nowcoder.wendaFreemarker.model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Random;
 
 @RunWith(SpringRunner.class)
@@ -30,9 +35,10 @@ public class InitDatabaseTests {
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
 		SqlSession session = sessionFactory.openSession(true);
 		UserDAO userDAO=session.getMapper(UserDAO.class);
+		QuestionDAO questionDAO=session.getMapper(QuestionDAO.class);
 
 		Random random = new Random();
-		for (int i = 90; i < 100; ++i) {
+		for (int i = 0; i < 11; ++i) {
 			User user = new User();
 			user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", random.nextInt(1000)));
 			user.setName(String.format("USER%d", i));
@@ -40,24 +46,24 @@ public class InitDatabaseTests {
 			user.setSalt("");
 			userDAO.addUser(user);
 
-//			user.setPassword("newpassword");
-//			userDAO.updatePassword(user);
-//
-//			Question question = new Question();
-//			question.setCommentCount(i);
-//			Date date = new Date();
+			user.setPassword("newpassword");
+			userDAO.updatePassword(user);
+
+			Question question = new Question();
+			question.setCommentCount(i);
+//			Data date = new Date();
 //			date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
-//			question.setCreatedDate(date);
-//			question.setUserId(i + 1);
-//			question.setTitle(String.format("TITLE{%d}", i));
-//			question.setContent(String.format("Balaababalalalal Content %d", i));
-//			questionDAO.addQuestion(question);
+//			question.setCreatedDate();
+			question.setUserId(i + 1);
+			question.setTitle(String.format("TITLE{%d}", i));
+			question.setContent(String.format("Balaababalalalal Content %d", i));
+			questionDAO.addQuestion(question);
 		}
 //		session.commit();
-//		Assert.assertEquals("newpassword", userDAO.selectById(1).getPassword());
-//		userDAO.deleteById(1);
-//		Assert.assertNull(userDAO.selectById(1));
-
+		Assert.assertEquals("newpassword", userDAO.selectById(1).getPassword());
+		userDAO.deleteById(5);
+		Assert.assertNull(userDAO.selectById(5));
+		System.out.println(questionDAO.selectLatestQuestions(0,0,10));
 //		/**
 //		 * 映射sql的标识字符串，
 //		 * me.gacl.mapping.userMapper是userMapper.xml文件中mapper标签的namespace属性的值，

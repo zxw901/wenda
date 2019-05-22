@@ -31,5 +31,7 @@
         <!-- 注册userMapper.xml文件，
         userMapper.xml位于me.gacl.mapping这个包下，所以resource写成me/gacl/mapping/userMapper.xml-->
         <mapper class="com.nowcoder.wendaFreemarker.dao.UserDAO"/>
+        <mapper class="com.nowcoder.wendaFreemarker.dao.QuestionDAO"/>
+        <mapper resource="XmlDao/QuestionDAO.xml"/>
     </mappers>
 </configuration>
